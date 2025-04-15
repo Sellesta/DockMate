@@ -1,0 +1,197 @@
+{
+  "name": "sellesta-devdock",
+  "displayName": "DevDock - Development Services Hub",
+  "description": "A VS Code extension that provides a centralized hub for accessing and managing your development services directly from your editor. It eliminates the hassle of constantly switching between browser tabs and remembering port numbers by bringing all your microservices, databases, documentation, and development tools into one convenient sidebar.",
+  "version": "0.0.1",
+  "type": "module",
+  "publisher": "Moses Wanjema",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Sellesta/DockMate.git"
+  },
+  "engines": {
+    "vscode": "^1.98.2"
+  },
+  "icon": "icon.png",
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onCommand:devdock.openInWebView"
+  ],
+  "main": "./dist/extension.mjs",
+  "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "devdock-sidebar",
+          "title": "DevDock",
+          "icon": "resources/services-icon.svg"
+        }
+      ]
+    },
+    "views": {
+      "devdock-sidebar": [
+        {
+          "id": "devServices",
+          "name": "Dev Services"
+        }
+      ]
+    },
+    "commands": [
+      {
+        "command": "devdock.openService",
+        "title": "Open Service"
+      },
+      {
+        "command": "devdock.refresh",
+        "title": "Refresh Services"
+      },
+      {
+        "command": "devdock.addService",
+        "title": "Add Service",
+        "icon": "$(add)"
+      },
+      {
+        "command": "devdock.editService",
+        "title": "Edit Service",
+        "icon": "$(edit)"
+      },
+      {
+        "command": "devdock.removeService",
+        "title": "Remove Service",
+        "icon": "$(trash)"
+      }
+    ],
+    "menus": {
+      "view/title": [
+        {
+          "command": "devdock.addService",
+          "when": "view == devServices",
+          "group": "navigation"
+        },
+        {
+          "command": "devdock.refresh",
+          "when": "view == devServices",
+          "group": "navigation"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "devdock.editService",
+          "when": "view == devServices && viewItem == service",
+          "group": "inline"
+        },
+        {
+          "command": "devdock.removeService",
+          "when": "view == devServices && viewItem == service",
+          "group": "inline"
+        },
+        {
+          "command": "devdock.openService",
+          "when": "view == devServices && viewItem == service",
+          "group": "navigation"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "DevDock",
+      "properties": {
+        "devdock.services": {
+          "type": "array",
+          "default": [
+            {
+              "label": "JWT.io",
+              "url": "https://jwt.io/",
+              "iconPath": {
+                "light": "resources/jwt-light.svg",
+                "dark": "resources/jwt-dark.svg"
+              },
+              "description": "JSON Web Token debugger and inspector"
+            }
+          ],
+          "items": {
+            "type": "object",
+            "required": [
+              "label",
+              "url",
+              "iconPath"
+            ],
+            "properties": {
+              "label": {
+                "type": "string",
+                "description": "Display name of the service"
+              },
+              "url": {
+                "type": "string",
+                "description": "URL of the service"
+              },
+              "iconPath": {
+                "type": "object",
+                "required": [
+                  "light",
+                  "dark"
+                ],
+                "properties": {
+                  "light": {
+                    "type": "string",
+                    "description": "Path to the light theme icon"
+                  },
+                  "dark": {
+                    "type": "string",
+                    "description": "Path to the dark theme icon"
+                  }
+                }
+              },
+              "description": {
+                "type": "string",
+                "description": "Optional description of the service"
+              }
+            }
+          },
+          "description": "List of available dev services"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run package",
+    "compile": "npm run check-types && npm run lint && node esbuild.js",
+    "watch": "npm-run-all -p watch:*",
+    "watch:esbuild": "node esbuild.js --watch",
+    "watch:tsc": "tsc --noEmit --watch --project tsconfig.json",
+    "package": "npm run check-types && npm run lint && node esbuild.js --production",
+    "compile-tests": "tsc -p . --outDir out",
+    "watch-tests": "tsc -p . -w --outDir out",
+    "pretest": "npm run compile-tests && npm run compile && npm run lint",
+    "check-types": "tsc --noEmit",
+    "lint": "eslint src",
+    "test": "vscode-test"
+  },
+  "devDependencies": {
+    "@types/mocha": "^10.0.10",
+    "@types/node": "20.x",
+    "@types/vscode": "^1.99.0",
+    "@typescript-eslint/eslint-plugin": "^8.25.0",
+    "@typescript-eslint/parser": "^8.25.0",
+    "@vscode/test-cli": "^0.0.10",
+    "@vscode/test-electron": "^2.4.1",
+    "@vscode/vsce": "^3.3.2",
+    "esbuild": "^0.25.2",
+    "eslint": "^9.21.0",
+    "npm-run-all": "^4.1.5",
+    "typescript": "^5.8.2"
+  },
+  "dependencies": {
+    "markdown-it": "^14.1.0",
+    "open": "^10.1.0",
+    "xml2js": "^0.6.2"
+  },
+  "keywords": [],
+  "author": "Moses Wanjema",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Sellesta/DockMate/issues"
+  },
+  "homepage": "https://github.com/Sellesta/DockMate#readme"
+}
